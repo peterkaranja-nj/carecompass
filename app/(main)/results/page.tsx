@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { AlertTriangle, Stethoscope, Heart, MapPin, Phone, Share2, Download, ChevronRight } from 'lucide-react'
@@ -31,7 +32,7 @@ const URGENCY_ICONS = {
   routine: Heart,
 }
 
-export default function ResultsPage() {
+function ResultsPageInner() {
   const searchParams = useSearchParams()
   const urgency = (searchParams.get('urgency') as UrgencyLevel) || 'urgent'
   const config = getUrgencyConfig(urgency)
@@ -165,5 +166,17 @@ export default function ResultsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <ResultsPageInner />
+    </Suspense>
   )
 }
