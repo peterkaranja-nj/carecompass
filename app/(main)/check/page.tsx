@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -70,7 +70,7 @@ const slideVariants = {
   exit: { opacity: 0, x: -40 },
 }
 
-export default function CheckPage() {
+function CheckPageInner() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const initialQuery = searchParams.get('q') || ''
@@ -610,5 +610,17 @@ export default function CheckPage() {
         </AnimatePresence>
       </div>
     </div>
+  )
+}
+
+export default function CheckPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <CheckPageInner />
+    </Suspense>
   )
 }
